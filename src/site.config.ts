@@ -3,13 +3,13 @@ import type { CardListData, Config, IntegrationUserConfig, ThemeUserConfig } fro
 export const theme: ThemeUserConfig = {
   // === Basic configuration ===
   /** Title for your website. Will be used in metadata and as browser tab title. */
-  title: "Axi Theme 使用文档",
+  title: "sportsli",
   /** Will be used in index page & copyright declaration */
-  author: 'Axi Theme',
-  author_en: 'Axi Theme',
+  author: 'sportsli',
+  author_en: 'sportsli',
   /** Description metadata for your website. Can be used in page metadata. */
-  description: 'Axi Theme 使用文档',
-  description_en: 'Axi Theme Documentation',
+  description: '一枚工科生的个人主页，记录学习和生活的点滴',
+  description_en: 'A personal homepage of an engineering student, recording the bits and pieces of study and life.',
   /** The default favicon for your site which should be a path to an image in the `public/` directory. */
   favicon: '/favicon/favicon.ico',
   /** Specify the default language for this site. */
@@ -43,8 +43,8 @@ export const theme: ThemeUserConfig = {
   header: {
     menu: [
       { title: 'Blog', link: '/blog/research' },
-      { title: 'Academic', link: '/academic' },
-      { title: 'Projects', link: '/projects' },
+      { title: 'Projects', link: '/academic' },
+      //{ title: 'Projects', link: '/projects' },
       { title: 'Links', link: '/links' },
       { title: 'About', link: '/about' }
     ]
@@ -61,7 +61,7 @@ export const theme: ThemeUserConfig = {
     /** Enable displaying a "Astro & Axi theme powered" link in your site's footer. */
     credits: true,
     /** Optional details about the social media accounts for this site. */
-    social: { github: 'https://github.com/Axi404/Axi-Theme' }
+    social: { github: 'https://github.com/sportsli' }
   },
 
   content: {
@@ -78,16 +78,20 @@ export const theme: ThemeUserConfig = {
     /** Your location */
     location: 'China',
     /** Your GitHub username */
-    githubUsername: 'Axi404',
+    githubUsername: 'sportsli',
     /** Your email address */
-    email: 'gaoning@pjlab.org.cn',
+    email: 'jiayingli_hit@163.com',
     /** Your Google Scholar profile URL */
-    googleScholar: 'https://scholar.google.com/citations?user=W9mT0rcAAAAJ&hl=zh-CN',
+    //googleScholar: 'https://scholar.google.com/citations?user=W9mT0rcAAAAJ&hl=zh-CN',
+    bilibili: 'https://space.bilibili.com/1451353729',
+    redbook: 'https://www.xiaohongshu.com/user/profile/6a5b46bd000000000f038800',
+    zhihu: 'https://www.zhihu.com/people/dui-fang-zheng-zai-shu-ru-78-25',
+
     /** Blog start date for statistics */
-    blogStartDate: '2024-06-15',
+    blogStartDate: '2026-11-01',
     /** Domain configuration */
     domains: {
-      main: 'theme.axi404.top',
+       main: 'theme.axi404.top',
       // githubPages: '',
       // cloudflare: '',
       // friendCircle: '',

@@ -38,7 +38,7 @@ import config from '@/site-config'
               </Label>
             )}
             {config.personal?.email && (
-              <Label title='Email' as='a' href={`mailto:${config.personal.email}`}>
+              <Label title='邮箱' as='a' href={`mailto:${config.personal.email}`}>
                 <Icon name='email' class='size-4' slot='icon' />
               </Label>
             )}
@@ -47,28 +47,67 @@ import config from '@/site-config'
                 <Icon name='earth' class='size-4' slot='icon' />
               </Label>
             )}
+            {config.personal?.bilibili && (
+              <Label title='B站' as='a' href={config.personal.bilibili}>
+                <Icon name='bilibili' class='size-4' slot='icon' />
+              </Label>
+            )}
+            {config.personal?.redbook && (
+              <Label title='小红书' as='a' href={config.personal.redbook}>
+                <Icon name='earth' class='size-4' slot='icon' />
+              </Label>
+            )}
+            {config.personal?.zhihu && (
+              <Label title='知乎' as='a' href={config.personal.zhihu}>
+                <Icon name='zhihu' class='size-4' slot='icon' />
+              </Label>
+            )}
           </div>
         </div>
       </div>
 
     <div id='content' class='animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
       <Section title='About'>
-        <p class='text-muted-foreground'>在此处写入你的个人介绍。建议内容超过一行以获得更好的视觉效果。这是一个基于 Axi-Theme 的博客主题。你可以在这里展示你的项目、经历和想法。
+        <p class='text-muted-foreground'>23级网络工程本科在读，27级计算机专硕在读，从事llm相关研究。经常在一些场景邪修很多东西，25-26年负责学院体育相关工作也取得了一定的小成绩。
         </p>
         <Button title='More about me' class='w-fit self-end' href='/about' style='ahead' />
       </Section>
       <Section title='Education'>
         <Card
           as='a'
-          heading='你的学校 / 组织'
-          subheading='你的学位 / 职位'
-          date='开始时间 - 结束时间'
+          heading='大连理工大学软件学院'
+          subheading='本科，网络工程'
+          date='2023-至今'
+          href='#'
+        >
+        </Card>
+        <Card
+          as='a'
+          heading='齐齐哈尔市实验中学'
+          subheading='高中'
+          date='2020-2023'
+          href='#'
+        >
+        </Card>
+        <Card
+          as='a'
+          heading='齐齐哈尔市第三十四中学'
+          subheading='初中'
+          date='2017-2020'
+          href='#'
+        >
+        </Card>
+        <Card
+          as='a'
+          heading='齐齐哈尔市龙沙小学'
+          subheading='小学'
+          date='2011-2017'
           href='#'
         >
         </Card>
       </Section>
       <Section title='Statistics'>
-        <BlogStats blogStartDate={config.personal?.blogStartDate ? new Date(config.personal.blogStartDate) : new Date('2024-06-15')} />
+        <BlogStats blogStartDate={config.personal?.blogStartDate ? new Date(config.personal.blogStartDate) : new Date('2026-11-01')} />
       </Section>
       {config.personal?.githubUsername && (
         <GitHubActivityCalendar username={config.personal.githubUsername}/>

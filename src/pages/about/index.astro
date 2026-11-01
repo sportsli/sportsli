@@ -27,11 +27,13 @@ const distributions = [
 ---
 
 <PageLayout title='About' {headings} info='/about'>
-  <p>你的职业 / <Spoiler>关于你的一些冷知识</Spoiler></p>
+  <p>学生 / 爱体育的文化生</p>
   <p>
-    在这里写下你的个人简介。你可以介绍你的教育背景、研究方向、工作经历或者兴趣爱好。
+    一名哈尔滨工业大学的coming研究生，本科就读于大连理工大学软件学院，从事LLM相关研究。<br />
+    非正经文化生，深耕于体育，跑步、羽毛球涉猎较深。<br />
+    为什么要开始做博客呢，一方面是方便自己整理一些东西，另一方面是分享自己的一些奇奇怪怪的历程。<br />
   </p>
-  <Button title='赞助我' class='w-fit' href='/projects#sponsorship' style='ahead' />
+  <!-- <Button title='赞助我' class='w-fit' href='/projects#sponsorship' style='ahead' /> -->
   <h2 id='distribution'>网页分发<a class='anchor' href='#distribution'>#</a></h2>
   <p>
     为了提供更好的访问体验和可靠性，本站在多个平台进行了部署，您可以选择合适的镜像站点进行访问：
@@ -49,24 +51,24 @@ const distributions = [
         href: 'https://code.visualstudio.com/',
         icon: import('@/assets/tools/vscode.svg?raw')
       },
-      {
+      /*{
         name: 'Cursor',
         description: 'AI-powered Code Editor',
         href: 'https://cursor.com',
         icon: import('@/assets/tools/cursor.svg?raw')
-      },
-      {
+      },*/
+      /*{
         name: 'Chrome',
         description: 'Web Browser',
         href: 'https://www.google.com/chrome/',
         icon: import('@/assets/tools/chrome.svg?raw')
-      },
-      {
+      },*/
+      /*{
         name: 'Ubuntu',
         description: 'Linux Distribution',
         href: 'https://ubuntu.com',
         icon: import('@/assets/tools/ubuntu.svg?raw')
-      }
+      }*/
     ]}
   />
   <h2 id='copyright'>版权<a class='anchor' href='#copyright'>#</a></h2>
@@ -76,10 +78,9 @@ const distributions = [
     > 协议进行授权。这意味着您可以在协议允许的范围内自由地分享、复制本作品的内容及基于本作品内容进行创作，但必须注明原作者和链接，并且不得用于任何商业目的。
   </p>
   <p>
-    本站中的绝大多数博客封面均选自 Pixiv 的公开作品，并已注明原作链接（Hero
-    Image）。包括封面在内，本站中使用了一些来自互联网的图片等素材或商标、标志及相关知识产权，无论是否标注有
+    包括封面在内，本站中使用了一些来自互联网的图片等素材或商标、标志及相关知识产权，无论是否标注有
     © 或 ™
-    及其他标识，均归属它们各自的权利持有人所有，并无意侵犯其作品、商标或版权。如果本站中存在侵犯您权益的内容，请您联系我，我将尽快予以删除。
+    及其他标识，均归属它们各自的权利持有人所有，并无意侵犯其作品、商标或版权。
   </p>
   <svg width='160' height='56' viewBox='0 0 160 56' xmlns='http://www.w3.org/2000/svg'>
     <g transform='scale(1.3333333)'>
@@ -163,14 +164,10 @@ const distributions = [
   </svg>
   <h2 id='theme'>主题<a class='anchor' href='#theme'>#</a></h2>
   <p>
-    本主题 Astro-Axi 基于 Astro 的 <a href='https://astro-pure.js.org/docs'>Pure</a>, <a
-      href='https://github.com/chrismwilliams/astro-theme-cactus'>Cactus</a
-    > 以及 <a href='https://astro-theme-resume.vercel.app/'>Resume</a> 主题的基础之上进行了大量的修改，包括将组件从
-    package 中解耦，并添加到 Astro 惯用的 components 目录下，以彻底支持热重载；修改大量组件样式，并且对于如
-    Tags 页面进行重写，添加 Publication 界面等；修复大量 Bugs 如 BackToTop 组件统计错误；支持 i18n 多语言。
+    本站所用主题为<a href="https://github.com/Axi404/Axi-Theme">Axi-Theme</a>
   </p>
 
-  <AlgorithmShowcase class='my-8' />
+  <!--<AlgorithmShowcase class='my-8' />-->
 
   <Comment slot='bottom' />
 </PageLayout>

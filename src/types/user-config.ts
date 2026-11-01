@@ -61,6 +61,9 @@ export const UserConfigSchema = z.object({
     githubUsername: z.string().optional(),
     email: z.string().optional(),
     googleScholar: z.string().optional(),
+    bilibili: z.string().optional(),
+    redbook: z.string().optional(),
+    zhihu: z.string().optional(),
     blogStartDate: z.string().optional(),
     domains: z.object({
       main: z.string(),
