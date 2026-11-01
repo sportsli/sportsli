@@ -91,7 +91,7 @@ export const theme: ThemeUserConfig = {
     blogStartDate: '2026-11-01',
     /** Domain configuration */
     domains: {
-      main: 'theme.axi404.top',
+      main: 'sportsli.github.io',
       githubPages: 'sportsli.github.io',
       // cloudflare: '',
       // friendCircle: '',
