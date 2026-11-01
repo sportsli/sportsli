@@ -185,6 +185,12 @@ export const ThemeConfigSchema = () =>
       /** Your Google Scholar profile URL */
       googleScholar: z.string().optional().describe('Your Google Scholar profile URL'),
 
+      bilibili: z.string().optional().describe('Your Bilibili profile URL'),
+
+      redbook: z.string().optional().describe('Your Redbook profile URL'), 
+
+      zhihu: z.string().optional().describe('Your zhihu profile URL'),
+
       /** Blog start date for statistics */
       blogStartDate: z.string().optional().describe('Blog start date for statistics'),
 

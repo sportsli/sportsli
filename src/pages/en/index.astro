@@ -47,21 +47,60 @@ import GitHubActivityCalendar from '@/components/home/GitHubActivityCalendar.ast
                 <Icon name='earth' class='size-4' slot='icon' />
               </Label>
             )}
+            {config.personal?.bilibili && (
+              <Label title='bilibili' as='a' href={config.personal.bilibili}>
+                <Icon name='bilibili' class='size-4' slot='icon' />
+              </Label>
+            )}
+            {config.personal?.redbook && (
+              <Label title='red note' as='a' href={config.personal.redbook}>
+                <Icon name='earth' class='size-4' slot='icon' />
+              </Label>
+            )}
+            {config.personal?.zhihu && (
+              <Label title='zhihu' as='a' href={config.personal.zhihu}>
+                <Icon name='zhihu' class='size-4' slot='icon' />
+              </Label>
+            )}
           </div>
         </div>
       </div>
 
     <div id='content' class='animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
       <Section title='About'>
-        <p class='text-muted-foreground'>Write your personal introduction here. It is recommended to have more than one line for better visual effect. This is a blog theme based on Axi-Theme. You can showcase your projects, experiences, and thoughts here.</p>
+        <p class='text-muted-foreground'>I am currently pursuing a Bachelor's degree in Network Engineering at the 23rd level and a Master's degree in Computer Science at the 27th level, engaged in research related to LLM. A traditional Northeastern woman who can chat freely about anything</p>
         <Button title='More about me' class='w-fit self-end' href='/en/about' style='ahead' />
       </Section>
       <Section title='Education'>
         <Card
           as='a'
-          heading='Your School / Organization'
-          subheading='Your Degree / Position'
-          date='Start Date - End Date'
+          heading='school of software, Dalian University of Technology'
+          subheading='undergraduate student, network engineering'
+          date='2023-present'
+          href='#'
+        >
+        </Card>
+        <Card
+          as='a'
+          heading='Qiqihaer Experimental Middle School'
+          subheading='senior high school student'
+          date='2020-2023'
+          href='#'
+        >
+        </Card>
+        <Card
+          as='a'
+          heading='Qiqihaer No.34 Middle School'
+          subheading='junior high school student'
+          date='2017-2020'
+          href='#'
+        >
+        </Card>
+        <Card
+          as='a'
+          heading='Qiqihaer Longsha Xiaoxue'
+          subheading='primary school student'
+          date='2011-2017'
           href='#'
         >
         </Card>

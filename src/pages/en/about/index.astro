@@ -2,12 +2,16 @@
 import PageLayout from '@/layouts/CommonPage.astro'
 import AlgorithmShowcase from '@/components/about/AlgorithmShowcase.astro'
 import ToolSection from '@/components/about/ToolSection.astro'
+import Sponsorship from '@/components/about/Sponsorships.astro'
+import alipay from '@/assets/alipay-qrcode.png'
+import wechat from '@/assets/wechat-qrcode.png'
 import { Comment } from '@/components/advanced'
 import { Button, DistributionSection, Spoiler } from '@/components/user'
 
 const headings = [
   { depth: 2, slug: 'distribution', text: 'Distribution' },
   { depth: 2, slug: 'tools', text: 'Tools' },
+  { depth: 2, slug: 'sponsorship', text: 'Sponsorship' },
   { depth: 2, slug: 'copyright', text: 'Copyright' },
   { depth: 2, slug: 'theme', text: 'Theme' }
 ]
@@ -27,20 +31,20 @@ const distributions = [
 ---
 
 <PageLayout title='About' {headings} info='/about'>
-  <p>Your Profession / <Spoiler>Some fun facts about you</Spoiler></p>
+  <p>Student / <Spoiler>Cultural students who love sports</Spoiler></p>
   <p>
-    Write your personal introduction here. You can introduce your educational background, research interests, work experience, or hobbies.
+    A coming graduate student from Harbin Institute of Technology, with a bachelor's degree in the School of Software at Dalian University of Technology.<br />
+    Non serious cultural students, deeply involved in sports. I have a deep understanding of running and badminton.<br />
+    Non serious people in daily life love to do fancy jobs, but they really work hard for KPIs in their work.<br />
   </p>
-  <Button title='Sponsor Me' class='w-fit' href='/en/projects#sponsorship' style='ahead' />
+  <!--<Button title='Sponsor Me' class='w-fit' href='/en/projects#sponsorship' style='ahead' />-->
   <h2 id='distribution'>Website Distribution<a class='anchor' href='#distribution'>#</a></h2>
   <p>
-    To provide a better browsing experience and improved reliability, this site is deployed across
-    multiple platforms. You can choose the mirror site that best suits your needs:
+    In order to provide a better access experience and reliability, this site has been deployed on multiple platforms. You can choose the appropriate mirror site for access:
   </p>
   <DistributionSection class='mb-8 mt-6' {distributions} />
   <p>
-    If you encounter access issues, we recommend trying another mirror site. All sites are kept
-    synchronized and updated.
+    If you encounter access issues, it is recommended to try other mirror sites. All site content is kept synchronized and updated.
   </p>
   <h2 id='tools'>Tools<a class='anchor' href='#tools'>#</a></h2>
   <ToolSection
@@ -53,39 +57,47 @@ const distributions = [
         href: 'https://code.visualstudio.com/',
         icon: import('@/assets/tools/vscode.svg?raw')
       },
-      {
+      /*{
         name: 'Cursor',
         description: 'AI-powered Code Editor',
         href: 'https://cursor.com',
         icon: import('@/assets/tools/cursor.svg?raw')
-      },
-      {
+      },*/
+      /*{
         name: 'Chrome',
         description: 'Web Browser',
         href: 'https://www.google.com/chrome/',
         icon: import('@/assets/tools/chrome.svg?raw')
-      },
-      {
+      },*/
+      /*{
         name: 'Ubuntu',
         description: 'Linux Distribution',
         href: 'https://ubuntu.com',
         icon: import('@/assets/tools/ubuntu.svg?raw')
-      }
+      }*/
+    ]}
+  />
+  <h2 id='sponsorship'>Sponsorship<a class='anchor' href='#sponsorship'>#</a></h2>
+  <p>
+    If you like the related content shared on this site, please feel free to sponsor and support. Your support will help me continue to create higher quality content. 
+    You can provide sponsorship support through the following methods:
+  </p>
+  <Sponsorship
+    methods={[
+      { name: 'WeChat', icon: 'wechat-pay', image: wechat },
+      { name: 'Alipay', icon: 'alipay', image: alipay }
     ]}
   />
   <h2 id='copyright'>Copyright<a class='anchor' href='#copyright'>#</a></h2>
   <p>
-    Unless otherwise stated, all original content and site design are licensed under the <a
-      href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>CC BY-NC-SA 4.0</a
-    > license. This means you are free to share, copy, or adapt the work within the license scope, as
-    long as you give appropriate credit and **do not use it for commercial purposes**.
+    As you can see, all original content and overall designs on this site, unless otherwise specified, use<a
+    href=' https://creativecommons.org/licenses/by-nc-sa/4.0/ '>CC BY-NC-SA 4.0</a
+    >Authorize the agreement. This means that you are free to share, copy, and create based on the content of this work within the scope permitted by the agreement, but you must indicate the original author and link, and not use it for any commercial purposes.
   </p>
   <p>
-    Most blog cover images on this site are sourced from publicly available artworks on Pixiv and
-    are linked to the original (Hero Image). Other images, icons, trademarks, or materials used on
-    this site belong to their respective rights holders, regardless of whether a © or ™ is
-    explicitly shown. No copyright infringement is intended. If you believe any content on this site
-    infringes upon your rights, please contact me — I will promptly remove it.
+    Including the cover, this website uses some materials such as pictures from the Internet or trademarks, logos and related intellectual property rights, whether or not marked with
+    ©  or ™
+    And other marks belong to their respective rights holders and are not intended to infringe upon their works, trademarks or copyrights.
   </p>
   <svg width='160' height='56' viewBox='0 0 160 56' xmlns='http://www.w3.org/2000/svg'>
     <g transform='scale(1.3333333)'>
@@ -169,15 +181,8 @@ const distributions = [
   </svg>
   <h2 id='theme'>Theme<a class='anchor' href='#theme'>#</a></h2>
   <p>
-    This theme, Astro-Axi, is heavily modified based on Astro's <a
-      href='https://astro-pure.js.org/docs '>Pure</a
-    >, <a href='https://github.com/chrismwilliams/astro-theme-cactus '>Cactus</a>, and <a
-      href='https://astro-theme-resume.vercel.app/ '>Resume</a
-    > themes. The modifications include decoupling components from packages and moving them into the Astro-conventional
-    `components` directory to fully support hot reloading; redesigning the styles of many components,
-    rewriting pages such as the Tags page, and adding a Publication interface; fixing numerous bugs, such
-    as incorrect calculations in the BackToTop component; and adding support for i18n multi-language functionality.
+    The theme used on this site is <a href="https://github.com/Axi404/Axi-Theme">Axi-Theme</a>
   </p>
-  <AlgorithmShowcase class='my-8' />
+  <!--<AlgorithmShowcase class='my-8' />-->
   <Comment slot='bottom' />
 </PageLayout>

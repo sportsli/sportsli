@@ -10,14 +10,14 @@ import {
 import config from '@/site-config'
 
 const headings = [
-  { depth: 2, slug: 'about-me', text: 'About Me' },
-  { depth: 2, slug: 'research-interests', text: 'Research Interests' },
-  { depth: 2, slug: 'publications', text: 'Publications' },
-  { depth: 2, slug: 'open-source-projects', text: 'Open-source Projects' }
+  { depth: 2, slug: 'about-me', text: '关于我' },
+  { depth: 2, slug: 'research-interests', text: '研究兴趣' },
+  { depth: 2, slug: 'publications', text: '论文' },
+  { depth: 2, slug: 'open-source-projects', text: '开源项目' }
 ]
 ---
 
-<PageLayout title='Academic' {headings} info={{ slug: '/academic', hideComment: true }}>
+<PageLayout title='Research' {headings} info={{ slug: '/academic', hideComment: true }}>
   <h2 id='about-me'>About Me<a class='anchor' href='#about-me'>#</a></h2>
   <p>
     在此处介绍你的学术背景。例如：我是某某大学的几级本科生/研究生，目前在某个实验室实习或学习，师从某某教授，研究方向是某某。
@@ -28,8 +28,11 @@ const headings = [
     你可以详细描述你的研究动机、目标以及你目前正在关注的具体问题。
   </p>
 
-  <p>这是我的学术简历，欢迎下载。</p>
-  <Button title='下载简历' class='w-fit' href='#' target='_blank'>
+  <p>这是我的学术&求职简历，欢迎下载。</p>
+  <Button title='学术简历' class='w-fit' href='#' target='_blank'>
+    <Icon class='size-5' name='download' slot='before' />
+  </Button>
+  <Button title='求职简历' class='w-fit' href='#' target='_blank'>
     <Icon class='size-5' name='download' slot='before' />
   </Button>
   <h2 id='research-interests'>
@@ -68,7 +71,7 @@ const headings = [
       ))
     }
   </div>
-  <h2 id='publications'>Publications<a class='anchor' href='#publications'>#</a></h2>
+  <h2 id='paper'>Publications<a class='anchor' href='#publications'>#</a></h2>
   <PublicationSection
     publications={[
       {

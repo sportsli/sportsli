@@ -65,14 +65,14 @@ import config from '@/site-config'
           </div>
         </div>
       </div>
-
+      </section>
     <div id='content' class='animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
-      <Section title='About'>
-        <p class='text-muted-foreground'>23级网络工程本科在读，27级计算机专硕在读，从事llm相关研究。经常在一些场景邪修很多东西，25-26年负责学院体育相关工作也取得了一定的小成绩。
+      <Section title='关于我'>
+        <p class='text-muted-foreground'>23级网络工程本科在读，27级计算机专硕在读，从事llm相关研究。正经东北女汉子，可畅聊任意事情
         </p>
         <Button title='More about me' class='w-fit self-end' href='/about' style='ahead' />
       </Section>
-      <Section title='Education'>
+      <Section title='教育经历'>
         <Card
           as='a'
           heading='大连理工大学软件学院'
@@ -106,7 +106,7 @@ import config from '@/site-config'
         >
         </Card>
       </Section>
-      <Section title='Statistics'>
+      <Section title='统计'>
         <BlogStats blogStartDate={config.personal?.blogStartDate ? new Date(config.personal.blogStartDate) : new Date('2026-11-01')} />
       </Section>
       {config.personal?.githubUsername && (
