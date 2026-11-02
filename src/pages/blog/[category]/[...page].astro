@@ -12,30 +12,35 @@ export const prerender = true
 
 export const getStaticPaths = (async ({ paginate }) => {
   const categoryMap: Record<string, string> = {
+    'all': 'All',
     'tech': 'Technical',
     'daily': 'Daily Life',
     'research': 'Research',
     'journal': 'Month Journal'
   }
-  
-  const categoryOrder = ['research', 'tech', 'daily', 'journal']
-  
+
+  const categoryOrder = ['all', 'research', 'tech', 'daily', 'journal']
+
   const allCollections = await getBlogCollection()
   const allUniqueCategories = getUniqueCategories(allCollections)
-  
-  const uniqueCategories = categoryOrder.filter(cat => allUniqueCategories.includes(cat))
-  
+
+  const uniqueCategories = categoryOrder.filter(
+    cat => cat === 'all' || allUniqueCategories.includes(cat)
+  )
+
   return uniqueCategories.flatMap((category, index) => {
-    const collections = sortMDByDate(getCollectionsByCategory(allCollections, category))
+    const collections = category === 'all'
+      ? sortMDByDate(allCollections)
+      : sortMDByDate(getCollectionsByCategory(allCollections, category))
+
     const uniqueTags = getUniqueTags(collections)
     const collectionsCount = collections.length
-    
-    // Get previous and next categories (circular navigation)
+
     const prevIndex = index === 0 ? uniqueCategories.length - 1 : index - 1
     const nextIndex = index === uniqueCategories.length - 1 ? 0 : index + 1
     const prevCategory = uniqueCategories[prevIndex]
     const nextCategory = uniqueCategories[nextIndex]
-    
+
     return paginate(collections, {
       params: { category },
       pageSize: config.content?.blogPageSize || 8,

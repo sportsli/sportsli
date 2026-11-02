@@ -17,13 +17,22 @@ const { as: Tag = 'div', post, detailed = false, class: className } = Astro.prop
 
 const { id, data } = post
 
+const postDate =
+  ('updatedDate' in data ? data.updatedDate : undefined) ??
+  ('publishDate' in data ? data.publishDate : undefined)
+const tags: string[] = 'tags' in data && Array.isArray(data.tags) ? data.tags : []
+const isDraft = 'draft' in data && data.draft === true
+const language = 'language' in data ? data.language : undefined
+const heroImageColor =
+  data.heroImage && 'color' in data.heroImage ? data.heroImage.color : undefined
+
 const { remarkPluginFrontmatter } = await render(post)
-const postDate = data.updatedDate ?? data.publishDate
+//const postDate = data.updatedDate ?? data.publishDate
 
 const heroImageProps = data.heroImage ? {
   src: data.heroImage.src,
   alt: data.heroImage.alt,
-  color: data.heroImage.color,
+  //color: data.heroImage.color,
   width: data.heroImage.width || 1200,
   height: data.heroImage.height || 630
 } : undefined
@@ -38,7 +47,7 @@ function getLocalizedUrl(locale: string | undefined, path: string) {
 }
 ---
 
-<li
+<!-- <li
   class={cn(
     'post-preview group/card flex flex-col relative rounded-2xl border border-border bg-background transition-colors ease-in-out px-5 py-2.5 hover:bg-muted',
     detailed && 'max-sm:px-4 sm:py-5',
@@ -48,7 +57,18 @@ function getLocalizedUrl(locale: string | undefined, path: string) {
     data.heroImage?.color &&
     `--preview-highlight:color-mix(in srgb,${data.heroImage.color} 40%,hsl(var(--foreground)/var(--tw-text-opacity,1)));
     --preview-highlight-bg:hsl(from ${data.heroImage.color} h s l/20%)`}
->
+>-->
+    <li
+    class={cn(
+    'post-preview group/card flex flex-col relative rounded-2xl border border-border bg-background transition-colors ease-in-out px-5 py-2.5 hover:bg-muted',
+    detailed && 'max-sm:px-4 sm:py-5',
+    className
+  )}
+  style={detailed &&
+    heroImageColor &&
+    `--preview-highlight:color-mix(in srgb,${heroImageColor} 40%,hsl(var(--foreground)/var(--tw-text-opacity,1)));
+    --preview-highlight-bg:hsl(from ${heroImageColor} h s l/20%)`}
+  >
   <a
     class={cn(
       'group/link w-full flex flex-col transition-all hover:text-primary',
@@ -71,13 +91,17 @@ function getLocalizedUrl(locale: string | undefined, path: string) {
       )
     }
 
-    <FormattedDate class='min-w-[95px] py-1 text-xs' date={postDate} />
+    {postDate && <FormattedDate class='min-w-[95px] py-1 text-xs' date={postDate} />}
 
     <Tag class='z-10 flex-grow'>
       {/* title */}
       <div class='flex justify-between'>
-        <div class={detailed && 'font-medium'}>
+        <!--<div class={detailed && 'font-medium'}>
           {data.draft && <span class='text-red-500'>(Draft) </span>}
+          {data.title}
+        </div>-->
+          <div class={detailed ? 'font-medium': undefined}>
+          {isDraft && <span class='text-red-500'>(Draft) </span>}
           {data.title}
         </div>
         <svg
@@ -121,10 +145,10 @@ function getLocalizedUrl(locale: string | undefined, path: string) {
                 {remarkPluginFrontmatter.minutesRead}
               </span>
               {/* language */}
-              {data.language && (
+              {/*data.language*/ language && (
                 <span class='flex items-center gap-1'>
                   <Icon name='earth' class='size-4' />
-                  {data.language}
+                  {/*data.language*/ language}
                 </span>
               )}
             </div>
@@ -135,9 +159,9 @@ function getLocalizedUrl(locale: string | undefined, path: string) {
   </a>
   <!-- tags -->
   {
-    detailed && data.tags && (
+    detailed && /*data.tags*/ tags.length && (
       <ul class='tag-list mt-1 flex flex-wrap gap-2'>
-        {data.tags.map((tag: string) => (
+        {/*data.*/tags.map((tag: string) => (
           <li>
             <Button title={tag} href={getLocalizedUrl(Astro.currentLocale, `/tags/${tag}`)} style='pill' />
           </li>

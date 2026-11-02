@@ -22,7 +22,7 @@ const categoryOrder = ['research', 'tech', 'daily', 'journal']
 
 // Filter and map categories with custom order
 const categories = categoryOrder
-  .filter(cat => allCategories.includes(cat))
+  .filter(cat => cat === 'all' || allCategories.includes(cat))
   .map(cat => ({ slug: cat, name: categoryMap[cat] }))
 
 // 处理 trailingSlash: 'never' 配置的辅助函数

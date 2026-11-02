@@ -4,8 +4,8 @@ import { Image } from 'astro:assets'
 import PageLayout from '@/layouts/CommonPage.astro'
 import ProjectSection from '@/components/projects/ProjectSection.astro'
 import Sponsors from '@/components/projects/Sponsors.astro'
-import alipay from '@/assets/alipay-qrcode.jpg'
-import wechat from '@/assets/wechat-qrcode.jpg'
+import alipay from '@/assets/alipay-qrcode.png'
+import wechat from '@/assets/wechat-qrcode.png'
 import config from '@/site-config'
 
 import { Button, Icon } from '@/components/user'
@@ -31,18 +31,9 @@ const headings = [
       {
         name: '项目 1',
         description: '项目描述 1。你可以在这里介绍项目的主要功能。',
-        image: 'lumina.webp',
-        links: [{ type: 'site', href: '#' }]
+        image: '',
+        links: [{ type: '', href: '#' }]
       },
-      {
-        name: '项目 2',
-        description: '项目描述 2。你可以在这里介绍项目的主要功能。',
-        image: 'byddl.webp',
-        links: [
-          { type: 'site', href: '#' },
-          { type: 'github', href: '#' }
-        ]
-      }
     ]}
   />
 
@@ -69,13 +60,13 @@ const headings = [
       ))
     }
   </div>
-  <p>感谢这些人的支持：</p>
+  <!-- <p>感谢这些人的支持：</p>
   <Sponsors
     sponsors={[
       { name: '赞助者 1', amount: '10.0', date: '202X-XX-XX' },
       { name: '赞助者 2', amount: '50.0', date: '202X-XX-XX' }
     ]}
-  />
+  />-->
 </PageLayout>
 
 <script
