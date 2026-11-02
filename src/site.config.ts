@@ -91,7 +91,7 @@ export const theme: ThemeUserConfig = {
     blogStartDate: '2026-11-01',
     /** Domain configuration */
     domains: {
-      main: 'sportsli.github.io',
+      main: '',
       githubPages: 'sportsli.github.io',
       // cloudflare: '',
       // friendCircle: '',
