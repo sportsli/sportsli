@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/scripts/pretty-feed-v3.xsl" type="text/xsl"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:h="http://www.w3.org/TR/html4/"><channel><title>sportsli</title><description>一枚工科生的个人主页，记录学习和生活的点滴</description><link>https://sportsli.github.io</link><item><title>你好，世界</title><link>https://sportsli.github.io/blog/first-blog</link><guid isPermaLink="true">https://sportsli.github.io/blog/first-blog</guid><description>第一篇博客</description><pubDate>Sun, 01 Nov 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;两天半时间终于搭好了博客，好累啊。&lt;/p&gt;
-&lt;h2&gt;我的曲折经历&lt;/h2&gt;
-&lt;pre&gt;&lt;code&gt;周五晚上心血来潮，想搭一个博客，以前也有这个想法只不过一直没有付诸于行动。  
-我之前搜过一些技术博客基本上都是用Hexo搭建的。于是自己就在csdn上找了一些技术博客，然后看了看怎么搭建的，已经选好主题，用的是butterfly那个theme。我基本上半天左右就搭好了，就是中间因为要魔改界面但是hexo不能实时看效果觉得很麻烦，所以我就上网搜了搜相关的社区吧。  
-在社区里就看见了astro这个框架，目测效果很不错，于是周六晚上就开始实战了。先是跟着一些教程在空白模板上手搓，但是因为自己之前没有接触过相关技术，所以感觉很费劲。之前有在关注一些大佬的博客吧，在github上看见了他们所收藏和做的theme，感觉蛮好的。于是我就去github上把themeclone了下来，然后边看代码边手搓。(纯前端的东西我不放心给ai做，感觉ui设计和交互还是需要人来做的)  
-今天搓了一天，终于把我的博客也相当于半个个人主页搓好了。下周开始就在博客上写一些文章吧，顺便也是督促我学学习，把简历上的demo和leetcodehot100刷完就出去逛一逛书，顺带找找实习。
-&lt;/code&gt;&lt;/pre&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item></channel></rss>
