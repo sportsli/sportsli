@@ -39,7 +39,7 @@ export default defineConfig({
   // Top-Level Options
   site: isGithubPages ? `https://${config.personal?.domains?.githubPages || 'example.github.io'}/` : (isCloudflare ? `https://${config.personal?.domains?.cloudflare || 'example.pages.dev'}/` : `https://${config.personal?.domains?.main || 'example.com'}/`),
   // base: '/docs',
-  trailingSlash: 'never',
+  
 
   // Internationalization
   i18n: {
