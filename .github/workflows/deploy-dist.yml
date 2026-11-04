@@ -1,0 +1,55 @@
+name: Deploy dist
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-dist
+  cancel-in-progress: true
+
+env:
+  DIST_REPO: sportsli/sportsli.github.io   # 目标仓库
+  DIST_BRANCH: main
+  BASE_PATH: ''                            # 方案 B 子路径时填 /仓库名，方案 A 留空
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build for GitHub Pages
+        env:
+          DEPLOYMENT_PLATFORM: github
+        run: pnpm run build:github
+
+      - name: Push dist to ${{ env.DIST_REPO }}
+        env:
+          TOKEN: ${{ secrets.DIST_REPO_TOKEN }}
+        run: |
+          set -eu
+          cd dist
+          touch .nojekyll        # 关键：不加的话 _astro 会被 Jekyll 吞掉
+          git init -q
+          git checkout -q -b "$DIST_BRANCH"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -f
+          git commit -qm "deploy ${GITHUB_SHA:0:7}"
+          git push -f "https://x-access-token:${TOKEN}@github.com/${DIST_REPO}.git" "$DIST_BRANCH"
