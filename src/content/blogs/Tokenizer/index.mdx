@@ -1,0 +1,344 @@
+---
+title: 分词器
+publishDate: 2026-11-06
+updatedDate: 2026-11-06
+description: diy_llm02
+category: tech
+tags: 
+    - llm
+    - tokenizer
+
+language: zh
+---
+
+## 分词器
+
+分词器是什么，可以理解为人类与LLM之间的中转站。因为人input的是自然语言，而LLM需要input的是向量编码，那么分词器就需要把nature language转化为向量编码。输出同理。
+
+由于分词方法和效率的不一致，分词器就会影响LLM的表达效率和泛化能力。主要优化就是在大规模文本上训练词表然后固定下来方法去给模型使用
+
+### 一.分词器的训练
+
+训练分词器的四步： **准备预料->初始化基础单元（设定初始字符/子词单元）->统计并迭代合并->输出产物并用于编码解码**
+
+训练的意义在于总结出来一套vocab(词表)。
+
+#### 准备语料
+
+1.收集文本多样化，以增强泛化能力。在面向多语言或者混合语料场景，要统计语言分布情况，避免被高占比语言主导
+
+2.对原始文本清晰和标准化。第一个要去除或屏蔽乱码，第二个要对敏感信息进行脱敏。数据脱敏同时有助于提升下游文本与分词过程中的稳定性
+
+3.保留测试集
+
+#### 预分词
+
+1.对于原始文本进行切分成基础单元
+
+**(1)基于空格、标点进行分词**
+
+一个完整句子遇到空格或者标点可以分为独立tokens
+
+```python
+import re
+
+def part(text):
+	## r 表示原始字符：加了r前缀后，字符串里的反斜杠\会被当成普通字符，而不是转义符号
+	text=re.sub(r'[(.,!?;:()"\'\[\]{}]',r'\1',text)
+    tokens=text.spilt()
+    return tokens
+```
+
+**(2)基于Unicode类别划分**
+
+按照字符的Unicode`字母、数字、标点、中文、特殊字符等`类边新型切分，不同类别进入不同块。适合多语言混合文本
+
+**(3)基于字节级划分策略**
+
+将每个字符转成UTF-8字节序，按单个字节顺序得到一个独立的token
+
+```python
+def tokenize_byte_level(text):
+    tokens=[]
+    for ch in text:
+        utf_bytes=ch.encode("utf-8")
+        hex_bytes=[f"b:02X" for b in utf_bytes]
+        ##printf(f"{ch} 转化为UTF-8字节序列：{hex_bytes}")
+        
+        tokens.extend(hex_bytes)
+        return tokens
+```
+
+注：
+
+- Unicode是"编码标准"，为每个字符分配唯一码点；UTF-8是"编码格式"，负责将码点转换为字节序列。
+- Unicode是"编码标准"，为每个字符分配唯一码点；UTF-8是"编码格式"，负责将码点转换为字节序列。
+- UTF-8的一大优势是：ASCII字符（0-127）在UTF-8中的编码与ASCII码完全一致，且只占1个字节。
+- 第一种和第二种策略会出现文本缺乏显式分隔符，或出现长段同类字符。在这些情况下，预处理阶段难以有效断句，为了保证文本可编码，可能会被迫回退到更细粒度的兜底切分（接近字符级）。
+- UTF-8字节级策略具有最强的通用性，它把任意文本统一拆为字节序列，从而从根本上减少未词汇表外（OOV）问题并覆盖任意字符集。因为它以最细粒度开始，训练时通常需要更多轮的共现统计与合并来把零散字节压缩为紧凑且具语义的token，才能在Transformer计算效率与语义表征之间取得平衡。
+
+2.对于以空格为词边界的语言，可先用re表达式按单词边界和标点进行划分，而中文日文等语言逐字符或基于字的初始单元来保证覆盖性。
+
+3.预分词生成的基础单元序列将作为后续统计合并的输入，务必保存该序列与对应位置信息以便在训练过程反复高效更新。
+
+```python
+def btp_text_list(text):
+    """
+    UTF-8字节级预分词，返回：
+        1. tokens: 每个字符的字节序列+位置信息
+        2. t: 所有字节的十六进制字符串列表
+    """
+    tokens=[]
+    t=[]
+    for idx,char in enumerate(text):
+        utf8_bytes=char.encode('utf-8')
+        hex_bytes=' '.join(f"{b:02X}" for b in utf8_bytes)
+        tokens.append({
+            'char':char,
+            'bytes':hex_bytes,# 单个字符对应的UTF-8字节序列
+            start:idx,# 文本信息开始位置
+            end:idx+1 # 文本信息结束位置
+        })
+        t.extend(f"{b:02X}" for b in utf8_bytes)
+   return tokens,t
+```
+
+#### 统计并迭代更新
+
+1.子词候选统计
+
+遍历语料以收集后续决策统计信息
+
+| 算法                                                         | 方法                                                         | 适用场景                                       | 常见实现方式                                                | 典型LLM / 模型                                               |
+| :----------------------------------------------------------- | ------------------------------------------------------------ | :--------------------------------------------- | :---------------------------------------------------------- | :----------------------------------------------------------- |
+| [BPE](https://arxiv.org/pdf/1508.07909)                      | 统计当前字符、子词序列中相邻对的出现频次，每次贪心合并出现频次最高的相邻对，迭代构建词表——其决策仅基于频率统计。 | 简单高效； 高频子词压缩效果好； 适合大规模语料 | 字节级BPE 代码点级BPE                                       | GPT-2、GPT-3、GPT-4（tiktoken体系） LLaMA（改进BPE） RoBERTa |
+| [WordPiece](https://huggingface.co/learn/llm-course/en/chapter6/6) | 评估合并或保留某些子词组合对语料似然即语言模型性能的贡献，选择能显著提升语料拟合度的合并操作。 | 控制词表大小； 减少OOV； 适合MLM类模型         | 字符级、代码点级                                            | BERT（原始实现） DistilBERT 早期RoBERTa（兼容）              |
+| [Unigram LM](https://arxiv.org/abs/1808.06226)               | 从一个过大的种子词表出发，初始化每个token的概率。            | 概率建模子词； 对低频词更友好； 多语言适配强   | SentencePiece（Unigram模式） 支持byte-fallback              | T5、mT5 UL2 Gemma（Google系）                                |
+| [SentencePiece](https://arxiv.org/pdf/1804.10959)（框架）    | 是一个语言无关的子词分词框架，提供统一的训练与编码流程，支持多种分词算法（如BPE和Unigram）。这些算法在同一框架下独立使用，而非直接融合使用，其互补性体现在不同任务和数据条件下的适用性差异。 | 语言无关； 端到端训练tokenizer； 适合多语种    | **BPE或 Unigram的训练框架**（不是新算法） 支持byte-fallback | LLaMA（使用SP-BPE） DeepSeek系列                             |
+
+2.子词候选统计迭代更新
+
+- BPE算法：可以借助第一步子词候选统计数据作为初始化数据，进行单个token合并形成新的token，然后在多次迭代过程中动态统计共现次数，得到新的token.
+
+- WordPiece算法：会在迭代过程中动态统计当前词汇表中所有相邻子词对的出现情况。其关键并非简单合并频率最高的对子，而是优先选择能最大提升语料整体似然的子词对，从而形成更有表征意义的token，一个常用的近似评分为：
+  $$
+  score(A,B)=\frac{P(A,B)}{P(A)*P(B)}
+  $$
+
+- Unigram算法：基于一个子词概率语言模型，将一个句子的概率定义为其所有可能分词方式概率的总和。核心思想是通过迭代优化子词概率，使得整个语料的似然最大化。算法采用期望最大化（EM）方法，主要包含两步：
+
+  1. E步:期望步。在当前词表和子词概率下，为语料中的每个句子计算最可能的分词方式或前n个高概率分词方案，并据此估计每个子词在语料中的期望使用次数。
+  2. M步：最大化步。根据E步的统计结果，更新每个子词的概率，使整体语料的似然最大化。
+  3. 在每次迭代中，模型会剪枝（淘汰）概率较低的token如丢弃底部10%~20%，从而逐步收敛到一个较小且优化后的词表，直到达到预设的目标词表大小。这种方法相比BPE或WordPiece更依赖概率建模，能够灵活处理不同长度的子词，并自然保留最能解释语料的高频段。
+
+注:最大化语料似然指的是在训练分词器时，学习一套能让训练语料整体概率最大的token划分方式和词表，使语料中的字符序列可以被更高概率、更常见的token组合表示。
+
+- SentencePiece算法：它是一个独立的分词工具和实现库，能够直接从原始文本训练子词模型，因此无需用户在外部显式执行[预分词步骤](https://datawhalechina.github.io/diy-llm/chapter2/chapter2_分词器.html#22-预分词阶段)。它在内部会将空格、词边界等信息编码为特殊字符（训练输出中常见的`▁`用于表示词首空格），从而可以将空格也作为建表对象之一，接着会在这些初始token上应用BPE或Unigram算法，生成最终的token词表及映射。
+
+分词器核心就是迭代更新候选子词 → 控制词表大小或收敛指标 → 监控质量指标，不同算法仅在“候选生成方式”和“迭代更新策略”上有差异。
+
+#### 输出产物并用于编码与解码
+
+1.导出核心产物，训练完成后都需要到处指至少两个关键文件
+
+- **vocab文件**：记录所有token及其对应的id，是编码器和解码器的核心索引。
+- **merges文件**：按顺序记录所有子词合并规则或概率模型。二者共同决定tokenizer的编码与解码逻辑，并确保编码的可逆。
+
+2.下游使用前的验证和评估
+
+将tokenizer应用于一部分验证集，统计关键指标：
+
+平均token数与最大长度分布：直接影响显存占用、训练速度和推理效率；
+
+碎片化情况：检查关键实体、专业术语是否被拆得过碎，避免影响模型理解；
+
+跨语言token平衡度：多语言任务中需确保不同语言的常见模式都有足够的token支持。
+
+**注**：扩表之后优先采用增量训练、加入新merges项、清理极低频的token。但是要做回归测试，
+
+### 常用的分词器
+
+#### 字符分词器
+
+原理：将文本拆成字符
+
+优点：词表绩效，无OOV问题
+
+缺点：序列过长、语义系数
+
+#### 字节分词器
+
+把文字转成utf-8维护一个大小为256的基础词表，压缩比恒等于1，因为utf-8数量等于token数量。不具备压缩能力
+
+#### 词级分词器
+
+深度学习早期最主流方法。基于空格（以空格分隔词的语言）或者分词算将文本切分为词
+
+优点：保留完整语义。因为分词是以词为单位进行分词。
+
+缺点：1.词表会爆炸。2.OOV问题，因为语料里面不可能包含所有的词。
+
+#### BPE分词器
+
+核心思想：**统计语料中相邻字符对出现的频率**，迭代地将最频繁出现的字符对合并生成一个新的Token。
+
+主流llm分词算法
+
+```
+词表 V = 所有初始字符/字节
+重复 M 次：
+    统计当前语料中相邻符号对的频次
+    选最高频的 (a, b)
+    新符号 c = ab，加入 V
+    把所有相邻的 a b 替换成 c
+    记录合并规则 (a, b) -> c
+```
+
+BPE编码阶段需要加上`</w>`，核心作用是保证单词的完整性，并让编码可逆（就是解码能够从相应数字序列转化为原文）
+
+**总结**
+
+| 分词器类型 | 粒度         | 词表大小        | 词表外(OOV) | 序列长度 | 代表模型        |
+| :--------- | :----------- | :-------------- | :---------- | :------- | :-------------- |
+| 字符级     | 细           | 小 (100–5k)     | 无          | 非常长   | Char-RNN        |
+| 字节级     | 更细（字节） | 很小 (~256–1k)  | 无          | 很长     | GPT-2           |
+| 词级       | 粗           | 极大 (>100k)    | 严重        | 短       | Word2Vec, GloVe |
+| BPE        | 中（自适应） | 适中 (30k–100k) | 极少        | 适中     | GPT-4, Llama 3  |
+
+用大规模、高质量且多样的语料训练分词器通常会减少token碎片化。模型能够在有限窗口内“看到”更多内容->在一定程度上缓解因上下文长度受限引起的信息受限
+
+### DeepSeek分词器
+
+#### 1.加载DeepSeek Tokenizer
+
+```python
+from transformer import AutoTokenizer
+
+MODEL_NAME="deepseek-ai/deepseek-coder-6.7b-insrtucter"
+tokenizer=AutoTokenizer.from_pretrained(MODEL_NAME)
+#print(f"分词器大小V：{len(tokenizer.get_vocab())}")
+```
+
+#### 2.DeepSeek分词器的处理逻辑
+
+DeepSeek分词器是基于字节级BPE词表的，对其进行优化，显著缩短token序列长度。
+
+###  BPE分词器
+
+```python
+class BPETokenizer:
+ def __init__(self, num_merges):
+     self.num_merges = num_merges
+     self.merges = {}  # {(a,b): new_token_id}
+     self.vocab_size = 256  # 从byte开始
+
+ def get_stats(self, tokens):
+     pairs = Counter()
+     for i in range(len(tokens) - 1):
+         pairs[(tokens[i], tokens[i+1])] += 1
+     return pairs
+
+ def merge_tokens(self, tokens, pair, new_token):
+     i = 0
+     new_tokens = []
+     while i < len(tokens):
+         if i < len(tokens) - 1 and (tokens[i], tokens[i+1]) == pair:
+             new_tokens.append(new_token)
+             i += 2
+         else:
+             new_tokens.append(tokens[i])
+             i += 1
+     return new_tokens
+```
+
+### BPE分词器训练
+
+```python
+import regex
+from collections import Counter
+
+# DeepSeek风格正则
+DEEPSEEK_REGEX = r"\p{L}+|\p{N}+|[^\p{L}\p{N}\s]+|\s+"
+
+# 使用grapheme cluster保持emoji不被拆分
+def split_graphemes(token):
+    return tuple(regex.findall(r'\X', token))
+
+# BPE训练函数
+def train_bpe(texts, num_merges=50):
+    """
+    texts: 文本列表（用于训练BPE）
+    num_merges: BPE 迭代合并的次数
+    """
+    # 1.构建初始vocab（字符级+</w>结束符）
+    vocab = Counter()
+    for text in texts:
+        tokens = regex.findall(DEEPSEEK_REGEX, text)
+        for token in tokens:
+            chars = split_graphemes(token) + ('</w>',)
+            vocab[chars] += 1
+    merges = []
+    for _ in range(num_merges):
+        # 统计相邻pair出现次数
+        pairs = Counter()
+        for word, freq in vocab.items():
+            for i in range(len(word)-1):
+                pairs[(word[i], word[i+1])] += freq
+        if not pairs:
+            break
+
+        # 找到最常见pair
+        best_pair = max(pairs, key=pairs.get)
+        merges.append(best_pair)
+
+        # 合并所有vocab中的该pair
+        new_vocab = {}
+        for word, freq in vocab.items():
+            w = []
+            i = 0
+            while i < len(word):
+                if i < len(word)-1 and (word[i], word[i+1]) == best_pair:
+                    w.append(word[i]+word[i+1])
+                    i += 2
+                else:
+                    w.append(word[i])
+                    i += 1
+            new_vocab[tuple(w)] = freq
+        vocab = new_vocab
+    return merges, vocab
+
+# BPE Tokenizer类
+class BPETokenizer:
+    def __init__(self, merges):
+        self.merges = merges
+
+    def encode_word(self, token):
+        # 初始分成字符+</w>
+        word = list(split_graphemes(token)) + ['</w>']
+        # 按merge顺序依次合并
+        for pair in self.merges:
+            i = 0
+            new_word = []
+            while i < len(word):
+                if i < len(word)-1 and (word[i], word[i+1]) == pair:
+                    new_word.append(word[i]+word[i+1])
+                    i += 2
+                else:
+                    new_word.append(word[i])
+                    i += 1
+            word = new_word
+        return word
+
+    def encode(self, text):
+        tokens = regex.findall(DEEPSEEK_REGEX, text)
+        bpe_tokens = []
+        for t in tokens:
+            bpe_tokens.extend(self.encode_word(t))
+        return bpe_tokens
+
+    def decode(self, tokens):
+        # 拼接tokens并去掉结尾</w>
+        text = ''.join(tokens).replace('</w>', '')
+        return text
+```
+
